@@ -5,11 +5,26 @@ import os
 
 
 path = os.getcwd() + '\ModeChoiceOptima.txt'
-data = pd.read_csv(path, sep="\t")
-# data = pd.read_csv(path, header=None, names=['ID', 'DestAct'])
-data.head()
-data.describe()
+df = pd.read_csv(path, sep="\t")
+# df.head()
+# df.describe()
 
 #implement a scatter plot for the data (see example in the slides)
-plt.scatter(data.ID, data.DestAct)
-plt.show()
+# plt.scatter(df.ID, df.DestAct)
+# plt.show()
+
+
+# sort out choices of transport mode per ID
+df.sort_index()
+all_choices = df.Choice
+all_ID = df.ID
+
+
+amount_Id = df.ID.value_counts(normalize=False, sort=True, ascending=False, bins=None, dropna=True)
+print(len(amount_Id))
+
+
+
+
+
+
