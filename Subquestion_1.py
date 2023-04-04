@@ -77,4 +77,15 @@ TC = df.TypeCommune
 
 
 
-# ------------ STEP 3: apply machine learning ------------
+# ------------ STEP 3: Apply Maching Learning ------------
+
+
+
+
+
+
+
+
+
+
+# ------------ STEP 4: Result Analysis ------------
