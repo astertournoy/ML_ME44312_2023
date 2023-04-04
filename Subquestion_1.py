@@ -56,8 +56,25 @@ ax.set_zlabel('Soft Mode')
 plt.show()
 
 
+# DATASET2 NEEDED: TYPE OF COMMUNE
+TC = df.TypeCommune
+
 
 
 
 # ------------ STEP 2: data preparation ------------
-# add labels to the modes of transports
+# add labels to the modes of transports ID's use the most.
+
+
+
+
+
+# split training data and testing data
+
+
+
+
+
+
+
+# ------------ STEP 3: apply machine learning ------------
