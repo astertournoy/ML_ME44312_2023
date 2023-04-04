@@ -1,8 +1,11 @@
 import import_data
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+df = import_data.df
+
 
 # We make a dictionary per ID, that says how often that ID chooses 0 (public transport),\
 # 1 (private mode) or 2 (soft mode)
-
 
 # Create an empty dictionary to store the results
 result_dict = {}

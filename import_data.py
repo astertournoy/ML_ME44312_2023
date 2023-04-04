@@ -1,8 +1,6 @@
-#import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import os
-from mpl_toolkits.mplot3d import Axes3D
+
 
 
 path = os.getcwd() + '\ModeChoiceOptima.txt'
