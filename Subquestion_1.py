@@ -5,11 +5,14 @@ df = import_data.df
 
 
 # ------------ STEP 1: import data for this question ------------
-# DATASET1 NEEDED: PREFERRED MODE OF TRANSPORT
+# DATASET1 NEEDED: TYPE OF COMMUNE
+TC = df.TypeCommune
+
+# DATASET2 NEEDED: PREFERRED MODE OF TRANSPORT
 # We plot the data first to have an idea what it looks like
 
 # We make a dictionary per ID, that says how often that ID chooses 0 (public transport),\
-# 1 (private mode) or 2 (soft mode)
+# 1 (private mode) or 2 (soft mode) AND that says
 
 # Create an empty dictionary to store the results
 result_dict = {}
@@ -21,8 +24,12 @@ for idx in df['ID'].unique():
     count_0 = (sub_df['Choice'] == 0).sum()
     count_1 = (sub_df['Choice'] == 1).sum()
     count_2 = (sub_df['Choice'] == 2).sum()
+    # Get the value of TC for the current index value
+    tc_value = sub_df['TypeCommune'].iloc[0]
     # Add the counts to the dictionary
-    result_dict[idx] = {'public_transport': count_0, 'private_mode': count_1, 'soft_mode': count_2}
+    result_dict[idx] = {'public_transport': count_0, 'private_mode': count_1, 'soft_mode': count_2, 'TC': tc_value}
+
+# print(result_dict)
 # print(len(result_dict))
 
 # Create an empty list to store the public_transport values
@@ -55,9 +62,6 @@ ax.set_zlabel('Soft Mode')
 # Show the plot
 plt.show()
 
-
-# DATASET2 NEEDED: TYPE OF COMMUNE
-TC = df.TypeCommune
 
 
 
