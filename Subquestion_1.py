@@ -4,6 +4,10 @@ from mpl_toolkits.mplot3d import Axes3D
 df = import_data.df
 
 
+# ------------ STEP 1: import data for this question ------------
+# DATASET1 NEEDED: PREFERRED MODE OF TRANSPORT
+# We plot the data first to have an idea what it looks like
+
 # We make a dictionary per ID, that says how often that ID chooses 0 (public transport),\
 # 1 (private mode) or 2 (soft mode)
 
@@ -19,9 +23,7 @@ for idx in df['ID'].unique():
     count_2 = (sub_df['Choice'] == 2).sum()
     # Add the counts to the dictionary
     result_dict[idx] = {'public_transport': count_0, 'private_mode': count_1, 'soft_mode': count_2}
-
 # print(len(result_dict))
-
 
 # Create an empty list to store the public_transport values
 public_transport_values = []
@@ -52,3 +54,10 @@ ax.set_zlabel('Soft Mode')
 
 # Show the plot
 plt.show()
+
+
+
+
+
+# ------------ STEP 2: data preparation ------------
+# add labels to the modes of transports
