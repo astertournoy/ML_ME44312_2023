@@ -1,5 +1,6 @@
 import import_data
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 from mpl_toolkits.mplot3d import Axes3D
 df = import_data.df
 
@@ -41,9 +42,12 @@ for idx in df['ID'].unique():
     result_dict[idx] = {'public_transport': count_0, 'private_mode': count_1, 'soft_mode': count_2, \
                         'PM': preferred_mode, 'TC': tc_value}
 
-print(result_dict)
+# print(result_dict)
 # print(len(result_dict))
 
+
+
+# ANALYSE DATA - plotting and printing
 # Create an empty list to store the public_transport values
 public_transport_values = []
 private_mode_values = []
@@ -54,7 +58,6 @@ for id, values in result_dict.items():
     public_transport_values.append(values['public_transport'])
     private_mode_values.append(values['private_mode'])
     soft_mode_values.append(values['soft_mode'])
-
 
 # plot data
 x = public_transport_values
@@ -160,6 +163,20 @@ for idx, values in result_dict.items():
 
 
 # ------------ STEP 2: data preparation ------------
+# Create a filtered dictionary with only PM values of 0, 1, or 2
+filtered_dict = {k:v for k,v in result_dict.items() if v['PM'] in [0,1,2]}
+# print(filtered_dict)
+# print(len(filtered_dict))
+
+
+# Split the filtered dictionary into train and test sets with 70/30 ratio
+# train_dict, test_dict = train_test_split(filtered_dict, test_size=0.3)
+
+# print("Number of IDs in train set:", len(train_dict))
+# print("Number of IDs in test set:", len(test_dict))
+
+
+
 # split training data and testing data
 
 
