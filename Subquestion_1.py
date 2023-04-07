@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from mpl_toolkits.mplot3d import Axes3D
 df = import_data.df
 
+<<<<<<< Updated upstream
 
 # ------------ STEP 1: import data for this question ------------
 # DATASET1 NEEDED: TYPE OF COMMUNE
@@ -52,6 +53,17 @@ for idx in df['ID'].unique():
 public_transport_values = []
 private_mode_values = []
 soft_mode_values = []
+=======
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.colors import ListedColormap
+from sklearn import neighbors, datasets
+from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn.metrics import accuracy_score
+
+
+#%%
+>>>>>>> Stashed changes
 
 # add values of data to lists
 for id, values in result_dict.items():
@@ -175,6 +187,7 @@ filtered_dict = {k:v for k,v in result_dict.items() if v['PM'] in [0,1,2]}
 # print("Number of IDs in train set:", len(train_dict))
 # print("Number of IDs in test set:", len(test_dict))
 
+<<<<<<< Updated upstream
 
 
 # split training data and testing data
@@ -189,11 +202,81 @@ filtered_dict = {k:v for k,v in result_dict.items() if v['PM'] in [0,1,2]}
 
 
 
+=======
+#%%
+
+# Importing final data_frame
+df_1 = df_final
+
+#Splitting dataset into train, validation and test data
+df_train,df_test = train_test_split(df_1,test_size=0.3,random_state = 1)
+
+
+# ------------ STEP 3: Apply Maching Learning ------------
+#Multi-Clustering Code
+n_neighbors = 30
+>>>>>>> Stashed changes
 
 
 
+<<<<<<< Updated upstream
+=======
+X_test = df_test[['Income','TC']].to_numpy()
+Y_test = df_test['PM'].to_numpy()
 
 
+# Create color maps
+cmap_light = ListedColormap(["grey", "green", "lightgrey"])
+cmap_bold = ["green", "orange", "darkblue"]
+
+for weights in ["uniform", "distance"]:
+    # we create an instance of Neighbours Classifier and fit the data.
+    clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
+    clf.fit(X_train, Y_train)
+
+    _, ax = plt.subplots()
+    DecisionBoundaryDisplay.from_estimator(
+        clf,
+        X_train,
+        cmap=cmap_light,
+        ax=ax,
+        response_method="predict",
+        plot_method="pcolormesh",
+        xlabel='Wealth',
+        ylabel='Type of Commune',
+        shading="auto",
+    )
+
+    # Plot also the training points
+    sns.scatterplot(
+        x=X_train[:, 0],
+        y=X_train[:, 1],
+        hue=df_train['Label'].to_numpy(),
+        palette=cmap_bold,
+        alpha=1.0,
+        edgecolor="black",)
+    
+    # # Create the 3D plot
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
+    # x=X_train[:, 0],
+    # y=X_train[:, 1],
+    # z=X_train[:, 2],
+    # ax.scatter(x, y, z)
+
+    plt.title(
+        "3-Class training classification (k = %i, weights = '%s')" % (n_neighbors, weights)
+    )
+    
+    plt.savefig(("q1_train (weights = '%s')" % (weights)), dpi=800)
+    plt.show()
+    
+>>>>>>> Stashed changes
+
+
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(Y_test, y_pred)
+print("Accuracy:", accuracy)
 
 
 # ------------ STEP 4: Result Analysis ------------

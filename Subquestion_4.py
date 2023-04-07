@@ -6,11 +6,13 @@ from sklearn import neighbors, datasets
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.model_selection import train_test_split
 import pandas as pd
+from sklearn.metrics import accuracy_score
 
 #Datasets
 import Subquestion_1
 import import_data
 
+<<<<<<< Updated upstream
 #Cleaning and creating final dataframe
 MOT_dict = Subquestion_1.result_dict
 MOT_df = pd.DataFrame.from_dict(MOT_dict, orient='index')
@@ -26,25 +28,31 @@ df_4.drop(df_4[df_4['Gender'] == -1].index, inplace = True)
 df_4.drop(df_4[df_4['age'] == -1].index, inplace = True)
 df_4.drop(df_4[df_4['PM'] < 0].index, inplace = True)
 
+=======
+
+df_4 = Data_Prep.df_final
+>>>>>>> Stashed changes
 
 #Multi-Clustering Code
-
 n_neighbors = 15
+
 
 #splitting dataset into train, validation and test data
 #X_train,X_test,Y_train,Y_test = train_test_split(X,y,test_size=0.3,random_state = 1)
 
 #splitting dataset into train, validation and test data
 df_train,df_test = train_test_split(df_4,test_size=0.3,random_state = 1)
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
-# # we only take the first two features. We could avoid this ugly
-# # slicing by using a two-dim dataset
-# X = df_4[['age','Gender']].to_numpy()
-# y = df_4['PM'].to_numpy()
 
 X_train = df_train[['age','Gender']].to_numpy()
 Y_train = df_train['PM'].to_numpy()
+
+X_test = df_test[['age','Gender']].to_numpy()
+Y_test = df_test['PM'].to_numpy()
 
 # Create color maps
 cmap_light = ListedColormap(["grey", "green", "lightgrey"])
@@ -84,3 +92,6 @@ for weights in ["uniform", "distance"]:
     plt.savefig(("q4_train (weights = '%s')" % (weights)), dpi=800)
     plt.show()
     
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(Y_test, y_pred)
+print("Accuracy:", accuracy)
