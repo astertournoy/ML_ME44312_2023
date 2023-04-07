@@ -164,11 +164,49 @@ for idx, values in result_dict.items():
 # print(total_useful)
 
 
+#Cleaning and creating final dataframe
+MOT_dict = result_dict
+MOT_df = pd.DataFrame.from_dict(MOT_dict, orient='index')
+
+df_age_gender = import_data.df[['ID','NbChild', 'CalculatedIncome','NbTV','NbCellPhones','SocioProfCat']]
+
+df_2 = pd.merge(MOT_df, df_age_gender, left_index=True, right_on="ID")
+df_2.loc[df_2['PM'] == 0,'Label'] = 'Public'
+df_2.loc[df_2['PM'] == 1,'Label'] = 'Private'
+df_2.loc[df_2['PM'] == 2,'Label'] = 'Soft'
+
+df_2.drop(df_2[df_2['NbChild'] == -1].index, inplace = True)
+df_2.drop(df_2[df_2['CalculatedIncome'] == -1].index, inplace = True)
+df_2.drop(df_2[df_2['NbTV'] == -1].index, inplace = True)
+df_2.drop(df_2[df_2['NbCellPhones'] == -1].index, inplace = True)
+df_2.drop(df_2[df_2['PM'] < 0].index, inplace = True)
+
+costofchild=300
+costoftv=25
+costofCP=20
+df_2['HighincomeH']= df_2['CalculatedIncome']-(costofchild*df_2['NbChild']+costoftv*df_2['NbTV']+costofCP*df_2['NbCellPhones'])
+
+for index, value in df_2['HighincomeH'].iteritems():
+    if value <=1000:
+        df_2.loc[index, 'HighincomeH'] = 1
+    elif value <=2500:
+        df_2.loc[index, 'HighincomeH'] = 2
+    elif value <=5000:
+        df_2.loc[index, 'HighincomeH'] = 3    
+    elif value<=7000:
+        df_2.loc[index, 'HighincomeH'] = 4
+    elif value <=10000:
+        df_2.loc[index, 'HighincomeH'] = 5
+    else:
+        df_2.loc[index, 'HighincomeH'] = 6
+
+
 # ------------ STEP 2: data preparation ------------
 # Create a filtered dictionary with only PM values of 0, 1, or 2
 filtered_dict = {k:v for k,v in result_dict.items() if v['PM'] in [0,1,2]}
 # print(filtered_dict)
 # print(len(filtered_dict))
+
 
 MOT_df = pd.DataFrame.from_dict(filtered_dict, orient='index')
 MOT_df.loc[MOT_df['PM'] == 0,'Label'] = 'Public'
@@ -183,6 +221,7 @@ df_final.drop(df_final[df_final['Gender'] == -1].index, inplace = True)
 df_final.drop(df_final[df_final['age'] == -1].index, inplace = True)
 df_final.drop(df_final[df_final['PM'] < 0].index, inplace = True)
 
-
+df_extra_2 = df_2[['ID','HighincomeH','SocioProfCat']]
+df_final = pd.merge(df_final, df_extra_2, left_on="ID", right_on="ID")
 
 
