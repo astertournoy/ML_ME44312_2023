@@ -168,9 +168,14 @@ filtered_dict = {k:v for k,v in result_dict.items() if v['PM'] in [0,1,2]}
 # print(filtered_dict)
 # print(len(filtered_dict))
 
+MOT_df = pd.DataFrame.from_dict(filtered_dict, orient='index')
+MOT_df.loc[df_4['PM'] == 0,'Label'] = 'Public'
+MOT_df.loc[df_4['PM'] == 1,'Label'] = 'Private'
+MOT_df.loc[df_4['PM'] == 2,'Label'] = 'Soft'
 
 # Split the filtered dictionary into train and test sets with 70/30 ratio
 # train_dict, test_dict = train_test_split(filtered_dict, test_size=0.3)
+
 
 # print("Number of IDs in train set:", len(train_dict))
 # print("Number of IDs in test set:", len(test_dict))
