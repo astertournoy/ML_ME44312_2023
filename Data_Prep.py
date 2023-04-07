@@ -175,9 +175,14 @@ MOT_df.loc[MOT_df['PM'] == 0,'Label'] = 'Public'
 MOT_df.loc[MOT_df['PM'] == 1,'Label'] = 'Private'
 MOT_df.loc[MOT_df['PM'] == 2,'Label'] = 'Soft'
 
-df_income = import_data.df[['ID','Income']]
-df_final = pd.merge(MOT_df, df_income, left_index=True, right_on="ID")
+
+df_extra= import_data.df[['ID', 'age', 'Gender','Income']]
+df_final = pd.merge(MOT_df, df_extra, left_index=True, right_on="ID")
 df_final.drop(df_final[df_final['Income'] == -1].index, inplace = True)
+df_final.drop(df_final[df_final['Gender'] == -1].index, inplace = True)
+df_final.drop(df_final[df_final['age'] == -1].index, inplace = True)
+df_final.drop(df_final[df_final['PM'] < 0].index, inplace = True)
+
 
 
 
