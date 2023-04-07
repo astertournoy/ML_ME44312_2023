@@ -1,13 +1,13 @@
-import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
 import seaborn as sns
-from sklearn import neighbors, datasets
 from matplotlib.colors import ListedColormap
+from sklearn import neighbors, datasets
 from sklearn.inspection import DecisionBoundaryDisplay
-from sklearn.cluster import KMeans
+from sklearn.model_selection import train_test_split
+import pandas as pd
+from sklearn.metrics import accuracy_score
 
+#Datasets
 import Subquestion_1
 import import_data
 
@@ -15,48 +15,60 @@ import import_data
 MOT_dict = Subquestion_1.result_dict
 MOT_df = pd.DataFrame.from_dict(MOT_dict, orient='index')
 
-# #Creating wealth index 
-# df_wealth_index = import_data.df[['ID', 'NbChild', 'Income', 'NbTV','NbCellPhones']]
+df_age_gender = import_data.df[['ID','NbChild', 'CalculatedIncome','NbTV','NbCellPhones','SocioProfCat']]
 
-# df_wealth_index.drop(df_wealth_index[df_wealth_index['NbChild'] == -1].index, inplace = True)
-# df_wealth_index.drop(df_wealth_index[df_wealth_index['Income'] == -1].index, inplace = True)
-# df_wealth_index.drop(df_wealth_index[df_wealth_index['NbTV'] == -1].index, inplace = True)
-# df_wealth_index.drop(df_wealth_index[df_wealth_index['NbCellPhones'] == -1].index, inplace = True)
+df_2 = pd.merge(MOT_df, df_age_gender, left_index=True, right_on="ID")
+df_2.loc[df_2['PM'] == 0,'Label'] = 'Public'
+df_2.loc[df_2['PM'] == 1,'Label'] = 'Private'
+df_2.loc[df_2['PM'] == 2,'Label'] = 'Soft'
 
-# # perform k-means clustering on the dataframe
-# kmeans = KMeans(n_clusters=5, random_state=0)
-# kmeans.fit(df_wealth_index)
+df_2.drop(df_2[df_2['NbChild'] == -1].index, inplace = True)
+df_2.drop(df_2[df_2['CalculatedIncome'] == -1].index, inplace = True)
+df_2.drop(df_2[df_2['NbTV'] == -1].index, inplace = True)
+df_2.drop(df_2[df_2['NbCellPhones'] == -1].index, inplace = True)
+df_2.drop(df_2[df_2['PM'] < 0].index, inplace = True)
 
-# # get the cluster assignments for each data point
-# df_wealth_index['cluster'] = kmeans.predict(df_wealth_index)
+costofchild=300
+costoftv=25
+costofCP=20
+df_2['HighincomeH']= df_2['CalculatedIncome']-(costofchild*df_2['NbChild']+costoftv*df_2['NbTV']+costofCP*df_2['NbCellPhones'])
 
-# # print the resulting dataframe with the cluster index
-# #print(df_wealth_index)
+for index, value in df_2['HighincomeH'].iteritems():
+    if value <=1000:
+        df_2.loc[index, 'HighincomeH'] = 1
+    elif value <=2500:
+        df_2.loc[index, 'HighincomeH'] = 2
+    elif value <=5000:
+        df_2.loc[index, 'HighincomeH'] = 3    
+    elif value<=7000:
+        df_2.loc[index, 'HighincomeH'] = 4
+    elif value <=10000:
+        df_2.loc[index, 'HighincomeH'] = 5
+    else:
+        df_2.loc[index, 'HighincomeH'] = 6
 
-# df_profession = import_data.df[['ID', 'SocioProfCat']]
-
-df_income_profession = import_data.df[['ID', 'Income', 'SocioProfCat']]
-
-#df_merge = pd.merge(MOT_df, df_wealth_index, df_profession, left_index=True, right_on="ID")
-df_merge = pd.merge(MOT_df, df_income_profession, left_index=True, right_on="ID")
-df_merge.loc[df_merge['PM'] == 0,'Label'] = 'Public'
-df_merge.loc[df_merge['PM'] == 1,'Label'] = 'Private'
-df_merge.loc[df_merge['PM'] == 2,'Label'] = 'Soft'
-
-df_merge.drop(df_merge[df_merge['Income'] == -1].index, inplace = True)
-df_merge.drop(df_merge[df_merge['SocioProfCat'] == -1].index, inplace = True)
-df_merge.drop(df_merge[df_merge['PM'] < 0].index, inplace = True)
-
-
+print(df_2)
 #Multi-Clustering Code
-n_neighbors = 6
+
+n_neighbors = 10
 
 #splitting dataset into train, validation and test data
-df_train,df_test = train_test_split(df_merge,test_size=0.3,random_state = 1)
+#X_train,X_test,Y_train,Y_test = train_test_split(X,y,test_size=0.3,random_state = 1)
+
+#splitting dataset into train, validation and test data
+df_train,df_test = train_test_split(df_2,test_size=0.3,random_state = 1)
 
 
-X_train = df_train[['Income', 'SocioProfCat']].to_numpy()
+# # we only take the first two features. We could avoid this ugly
+# # slicing by using a two-dim dataset
+# X = df_2[['age','Gender']].to_numpy()
+# y = df_2['PM'].to_numpy()
+
+X_train = df_train[['HighincomeH','SocioProfCat']].to_numpy()
 Y_train = df_train['PM'].to_numpy()
+
+X_test = df_test[['HighincomeH','SocioProfCat']].to_numpy()
+Y_test = df_test['PM'].to_numpy()
 
 # Create color maps
 cmap_light = ListedColormap(["grey", "green", "lightgrey"])
@@ -75,8 +87,8 @@ for weights in ["uniform", "distance"]:
         ax=ax,
         response_method="predict",
         plot_method="pcolormesh",
-        xlabel='Income',
-        ylabel='SocioProfCat',
+        xlabel='Income Classes',
+        ylabel='Social Professional Categories',
         shading="auto",
     )
 
@@ -93,7 +105,9 @@ for weights in ["uniform", "distance"]:
         "3-Class training classification (k = %i, weights = '%s')" % (n_neighbors, weights)
     )
     
-    # plt.savefig(("q4_train (weights = '%s')" % (weights)), dpi=800)
+    plt.savefig(("q2_train (weights = '%s')" % (weights)), dpi=800)
     plt.show()
-
-
+    
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(Y_test, y_pred)
+print("Accuracy:", accuracy)
