@@ -6,6 +6,7 @@ from sklearn import neighbors, datasets
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.model_selection import train_test_split
 import pandas as pd
+from sklearn.metrics import accuracy_score
 
 #Datasets
 import Subquestion_1
@@ -29,7 +30,7 @@ df_4.drop(df_4[df_4['PM'] < 0].index, inplace = True)
 
 #Multi-Clustering Code
 
-n_neighbors = 15
+n_neighbors = 10
 
 #splitting dataset into train, validation and test data
 #X_train,X_test,Y_train,Y_test = train_test_split(X,y,test_size=0.3,random_state = 1)
@@ -45,6 +46,9 @@ df_train,df_test = train_test_split(df_4,test_size=0.3,random_state = 1)
 
 X_train = df_train[['age','Gender']].to_numpy()
 Y_train = df_train['PM'].to_numpy()
+
+X_test = df_test[['age','Gender']].to_numpy()
+Y_test = df_test['PM'].to_numpy()
 
 # Create color maps
 cmap_light = ListedColormap(["grey", "green", "lightgrey"])
@@ -83,4 +87,8 @@ for weights in ["uniform", "distance"]:
     
     plt.savefig(("q4_train (weights = '%s')" % (weights)), dpi=800)
     plt.show()
+    
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(Y_test, y_pred)
+print("Accuracy:", accuracy)
     
