@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from mpl_toolkits.mplot3d import Axes3D
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.colors import ListedColormap
+from sklearn import neighbors, datasets
+from sklearn.inspection import DecisionBoundaryDisplay
+
+
 
 
 # # ------------ STEP 1: import data for this question ------------

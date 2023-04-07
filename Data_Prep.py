@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from mpl_toolkits.mplot3d import Axes3D
 df = import_data.df
+import pandas as pd
+
 
 
 # ------------ STEP 1: import data for this question ------------
