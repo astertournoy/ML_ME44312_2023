@@ -8,24 +8,25 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 
 #Datasets
-import Subquestion_1
-import import_data
+import Data_Prep
 
 #Cleaning and creating final dataframe
-MOT_dict = Subquestion_1.result_dict
-MOT_df = pd.DataFrame.from_dict(MOT_dict, orient='index')
+# MOT_dict = Subquestion_1.result_dict
+# MOT_df = pd.DataFrame.from_dict(MOT_dict, orient='index')
 
-df_age_gender = import_data.df[['ID','age', 'Gender']]
+# df_age_gender = import_data.df[['ID','age', 'Gender']]
 
-df_4 = pd.merge(MOT_df, df_age_gender, left_index=True, right_on="ID")
-df_4.loc[df_4['PM'] == 0,'Label'] = 'Public'
-df_4.loc[df_4['PM'] == 1,'Label'] = 'Private'
-df_4.loc[df_4['PM'] == 2,'Label'] = 'Soft'
+# df_4 = pd.merge(MOT_df, df_age_gender, left_index=True, right_on="ID")
+# df_4.loc[df_4['PM'] == 0,'Label'] = 'Public'
+# df_4.loc[df_4['PM'] == 1,'Label'] = 'Private'
+# df_4.loc[df_4['PM'] == 2,'Label'] = 'Soft'
 
-df_4.drop(df_4[df_4['Gender'] == -1].index, inplace = True)
-df_4.drop(df_4[df_4['age'] == -1].index, inplace = True)
-df_4.drop(df_4[df_4['PM'] < 0].index, inplace = True)
+# df_4.drop(df_4[df_4['Gender'] == -1].index, inplace = True)
+# df_4.drop(df_4[df_4['age'] == -1].index, inplace = True)
+# df_4.drop(df_4[df_4['PM'] < 0].index, inplace = True)
 
+
+df_train = Data_Prep.df_final
 
 #Multi-Clustering Code
 
@@ -35,8 +36,7 @@ n_neighbors = 15
 #X_train,X_test,Y_train,Y_test = train_test_split(X,y,test_size=0.3,random_state = 1)
 
 #splitting dataset into train, validation and test data
-df_train,df_test = train_test_split(df_4,test_size=0.3,random_state = 1)
-
+df_train,df_test = train_test_split(df_train,test_size=0.3,random_state = 1)
 
 # # we only take the first two features. We could avoid this ugly
 # # slicing by using a two-dim dataset
