@@ -1,5 +1,5 @@
 import pandas as pd
-from Data_Prep import df_final
+import Data_Prep
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import neighbors, datasets
@@ -283,7 +283,7 @@ from sklearn.metrics import accuracy_score
 #%%
 
 # Importing final data_frame
-df_1 = df_final
+df_1 = Data_Prep.df_final
 
 #Splitting dataset into train, validation and test data
 df_train,df_test = train_test_split(df_1,test_size=0.3,random_state = 1)
@@ -291,15 +291,15 @@ df_train,df_test = train_test_split(df_1,test_size=0.3,random_state = 1)
 
 # ------------ STEP 3: Apply Maching Learning ------------
 #Multi-Clustering Code
-n_neighbors = 30
+n_neighbors = 15
 
 # # we only take the first two features. We could avoid this ugly
 # # slicing by using a two-dim dataset
 
-X_train = df_train[['Income','TC']].to_numpy()
+X_train = df_train[['HighincomeH','TC']].to_numpy()
 Y_train = df_train['PM'].to_numpy()
 
-X_test = df_test[['Income','TC']].to_numpy()
+X_test = df_test[['HighincomeH','TC']].to_numpy()
 Y_test = df_test['PM'].to_numpy()
 
 # Create color maps
@@ -345,51 +345,57 @@ for weights in ["uniform", "distance"]:
 cmap_light = ListedColormap(["grey", "green", "lightgrey"])
 cmap_bold = ["green", "orange", "darkblue"]
 
-for weights in ["uniform", "distance"]:
-    # we create an instance of Neighbours Classifier and fit the data.
-    clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
-    clf.fit(X_train, Y_train)
-
-    _, ax = plt.subplots()
-    DecisionBoundaryDisplay.from_estimator(
-        clf,
-        X_train,
-        cmap=cmap_light,
-        ax=ax,
-        response_method="predict",
-        plot_method="pcolormesh",
-        xlabel='Wealth',
-        ylabel='Type of Commune',
-        shading="auto",
-    )
-
-    # Plot also the training points
-    sns.scatterplot(
-        x=X_train[:, 0],
-        y=X_train[:, 1],
-        hue=df_train['Label'].to_numpy(),
-        palette=cmap_bold,
-        alpha=1.0,
-        edgecolor="black",)
+acc = []
+k_val = list(range(1,25))
+for k in k_val:
+    for weights in ["uniform", "distance"]:
+        # we create an instance of Neighbours Classifier and fit the data.
+        clf = neighbors.KNeighborsClassifier(k, weights=weights)
+        clf.fit(X_train, Y_train)
     
-    # # Create the 3D plot
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111, projection='3d')
-    # x=X_train[:, 0],
-    # y=X_train[:, 1],
-    # z=X_train[:, 2],
-    # ax.scatter(x, y, z)
-
-    plt.title(
-        "3-Class training classification (k = %i, weights = '%s')" % (n_neighbors, weights)
-    )
+        _, ax = plt.subplots()
+        DecisionBoundaryDisplay.from_estimator(
+            clf,
+            X_train,
+            cmap=cmap_light,
+            ax=ax,
+            response_method="predict",
+            plot_method="pcolormesh",
+            xlabel='Wealth',
+            ylabel='Type of Commune',
+            shading="auto",
+        )
     
-    plt.savefig(("q1_train (weights = '%s')" % (weights)), dpi=800)
-    plt.show()
+        # Plot also the training points
+        sns.scatterplot(
+            x=X_train[:, 0],
+            y=X_train[:, 1],
+            hue=df_train['Label'].to_numpy(),
+            palette=cmap_bold,
+            alpha=1.0,
+            edgecolor="black",)
+        
+        # # Create the 3D plot
+        # fig = plt.figure()
+        # ax = fig.add_subplot(111, projection='3d')
+        # x=X_train[:, 0],
+        # y=X_train[:, 1],
+        # z=X_train[:, 2],
+        # ax.scatter(x, y, z)
     
-y_pred = clf.predict(X_test)
-accuracy = accuracy_score(Y_test, y_pred)
-print("Accuracy:", accuracy)
+        plt.title(
+            "3-Class training classification (k = %i, weights = '%s')" % (n_neighbors, weights)
+        )
+        
+        plt.savefig(("q1_train (weights = '%s')" % (weights)), dpi=800)
+        plt.show()
+        
+    y_pred = clf.predict(X_test)
+    accuracy = accuracy_score(Y_test, y_pred)
+    acc.append(accuracy)
+    print("Accuracy:", accuracy)
 
 
 # ------------ STEP 4: Result Analysis ------------
+  
+Data_Prep.acc_plot(k_val,acc,"Accuracy of the testing data the defined model as a funciton of K","Q1_acc")
