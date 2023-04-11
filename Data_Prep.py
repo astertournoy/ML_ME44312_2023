@@ -168,7 +168,7 @@ for idx, values in result_dict.items():
 MOT_dict = result_dict
 MOT_df = pd.DataFrame.from_dict(MOT_dict, orient='index')
 
-df_age_gender = import_data.df[['ID','NbChild', 'CalculatedIncome','NbTV','NbCellPhones','SocioProfCat']]
+df_age_gender = import_data.df[['ID','NbChild', 'CalculatedIncome','NbTV','NbCellPhones','SocioProfCat','NbCar','NbMoto','NbRoomsHouse']]
 
 df_2 = pd.merge(MOT_df, df_age_gender, left_index=True, right_on="ID")
 df_2.loc[df_2['PM'] == 0,'Label'] = 'Public'
@@ -181,10 +181,14 @@ df_2.drop(df_2[df_2['NbTV'] == -1].index, inplace = True)
 df_2.drop(df_2[df_2['NbCellPhones'] == -1].index, inplace = True)
 df_2.drop(df_2[df_2['PM'] < 0].index, inplace = True)
 
-costofchild=300
+costofchild=700
 costoftv=25
 costofCP=20
-df_2['HighincomeH']= df_2['CalculatedIncome']-(costofchild*df_2['NbChild']+costoftv*df_2['NbTV']+costofCP*df_2['NbCellPhones'])
+costofcar=800
+costofbike=100
+costofroom=486
+
+df_2['HighincomeH']= df_2['CalculatedIncome']-(costofcar*df_2['NbCar']+costofbike*df_2['NbMoto']+costofroom*df_2['NbRoomsHouse']+costofchild*df_2['NbChild']+costoftv*df_2['NbTV']+costofCP*df_2['NbCellPhones'])
 
 for index, value in df_2['HighincomeH'].iteritems():
     if value <=1000:
