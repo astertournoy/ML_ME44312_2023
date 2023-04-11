@@ -225,3 +225,11 @@ df_extra_2 = df_2[['ID','HighincomeH','SocioProfCat']]
 df_final = pd.merge(df_final, df_extra_2, left_on="ID", right_on="ID")
 
 
+# ------Plotting Function----------
+def acc_plot(k_val,acc,title,filename):
+    plt.plot(k_val, acc)
+    plt.xlabel('K Nearest Neighbours')
+    plt.ylabel('Percentage Accuracy of testing data (%)')
+    plt.title(title)
+    plt.savefig(filename + '.png')
+    plt.show()
