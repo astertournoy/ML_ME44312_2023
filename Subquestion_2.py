@@ -112,7 +112,7 @@ import seaborn as sns
 
 df_2 = Data_Prep.df_final
 
-n_neighbors = 10
+n_neighbors = 15
 
 #splitting dataset into train, validation and test data
 #X_train,X_test,Y_train,Y_test = train_test_split(X,y,test_size=0.3,random_state = 1)
