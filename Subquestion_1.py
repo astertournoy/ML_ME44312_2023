@@ -296,10 +296,10 @@ n_neighbors = 15
 # # we only take the first two features. We could avoid this ugly
 # # slicing by using a two-dim dataset
 
-X_train = df_train[['Income','TC']].to_numpy()
+X_train = df_train[['HighincomeH','TC']].to_numpy()
 Y_train = df_train['PM'].to_numpy()
 
-X_test = df_test[['Income','TC']].to_numpy()
+X_test = df_test[['HighincomeH','TC']].to_numpy()
 Y_test = df_test['PM'].to_numpy()
 
 # # Create color maps
