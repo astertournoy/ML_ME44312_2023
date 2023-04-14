@@ -112,7 +112,7 @@ import seaborn as sns
 
 df_2 = Data_Prep.df_final
 
-n_neighbors = 10
+n_neighbors = 15
 
 #splitting dataset into train, validation and test data
 #X_train,X_test,Y_train,Y_test = train_test_split(X,y,test_size=0.3,random_state = 1)
@@ -136,40 +136,47 @@ Y_test = df_test['PM'].to_numpy()
 cmap_light = ListedColormap(["grey", "green", "lightgrey"])
 cmap_bold = ["green", "orange", "darkblue"]
 
-for weights in ["uniform", "distance"]:
-    # we create an instance of Neighbours Classifier and fit the data.
-    clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
-    clf.fit(X_train, Y_train)
-
-    _, ax = plt.subplots()
-    DecisionBoundaryDisplay.from_estimator(
-        clf,
-        X_train,
-        cmap=cmap_light,
-        ax=ax,
-        response_method="predict",
-        plot_method="pcolormesh",
-        xlabel='Income Classes',
-        ylabel='Social Professional Categories',
-        shading="auto",
-    )
-
-    # Plot also the training points
-    sns.scatterplot(
-        x=X_train[:, 0],
-        y=X_train[:, 1],
-        hue=df_train['Label'].to_numpy(),
-        palette=cmap_bold,
-        alpha=1.0,
-        edgecolor="black",
-    )
-    plt.title(
-        "3-Class training classification (k = %i, weights = '%s')" % (n_neighbors, weights)
-    )
+acc = []
+k_val = list(range(1,25))
+for k in k_val:
+    for weights in ["uniform", "distance"]:
+        # we create an instance of Neighbours Classifier and fit the data.
+        clf = neighbors.KNeighborsClassifier(k, weights=weights)
+        clf.fit(X_train, Y_train)
     
-    plt.savefig(("q2_train (weights = '%s')" % (weights)), dpi=800)
-    plt.show()
+        _, ax = plt.subplots()
+        DecisionBoundaryDisplay.from_estimator(
+            clf,
+            X_train,
+            cmap=cmap_light,
+            ax=ax,
+            response_method="predict",
+            plot_method="pcolormesh",
+            xlabel='Income Classes',
+            ylabel='Social Professional Categories',
+            shading="auto",
+        )
     
-y_pred = clf.predict(X_test)
-accuracy = accuracy_score(Y_test, y_pred)
-print("Accuracy:", accuracy)
+        # Plot also the training points
+        sns.scatterplot(
+            x=X_train[:, 0],
+            y=X_train[:, 1],
+            hue=df_train['Label'].to_numpy(),
+            palette=cmap_bold,
+            alpha=1.0,
+            edgecolor="black",
+        )
+        plt.title(
+            "3-Class training classification (k = %i, weights = '%s')" % (n_neighbors, weights)
+        )
+        
+        plt.savefig(("q2_train (weights = '%s')" % (weights)), dpi=800)
+        plt.show()
+        
+    y_pred = clf.predict(X_test)
+    accuracy = accuracy_score(Y_test, y_pred)
+    acc.append(accuracy)
+    print("Accuracy:", accuracy)
+
+    
+Data_Prep.acc_plot(k_val,acc,"Accuracy of the testing data the defined model as a funciton of K","Q2_acc")
